@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>College Pal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <div class="logo">College Pal</div>
+    <ul>
+      <li><button onclick="showTab('notes')">Notes</button></li>
+      <li><button onclick="showTab('tasks')">Tasks</button></li>
+      <li><button onclick="showTab('planner')">Planner</button></li>
+      <li><button onclick="showTab('database')">Database</button></li>
+    </ul>
+  </nav>
+  <main>
+    <section id="notes" class="tab">
+      <h2>Notes</h2>
+      <div class="note-toolbar">
+        <button onclick="newNote()">New Note</button>
+      </div>
+      <div id="notes-list"></div>
+      <div id="note-editor" class="modal">
+        <textarea id="note-content" placeholder="Write your note..." autofocus></textarea>
+        <div>
+          <button onclick="saveNote()">Save</button>
+          <button onclick="closeEditor()">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="tasks" class="tab">
+      <h2>Tasks</h2>
+      <form id="task-form" onsubmit="addTask(event)">
+        <input id="task-input" placeholder="New task or assignment..." required>
+        <input type="date" id="task-date">
+        <button>Add</button>
+      </form>
+      <ul id="task-list"></ul>
+    </section>
+
+    <section id="planner" class="tab">
+      <h2>Planner / Calendar</h2>
+      <input type="month" id="planner-month" onchange="renderPlanner()" />
+      <div id="planner-view"></div>
+    </section>
+
+    <section id="database" class="tab">
+      <h2>Custom Tables</h2>
+      <button onclick="addRow()">Add Row</button>
+      <table id="db-table">
+        <thead>
+          <tr><th>Name</th><th>Value</th><th>Action</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
