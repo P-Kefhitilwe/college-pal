@@ -1,0 +1,240 @@
+:root {
+  --bg: #0b0c0f;
+  --surface: #16171a;
+  --text: #f2f2f2;
+  --accent: #4b72fa;
+  --accent-low: #22264a;
+  --border: #23242a;
+  --success: #26d364;
+  --danger: #ea4755;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+}
+nav {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  font-size: 1.5rem;
+  color: var(--accent);
+  font-weight: 700;
+  margin-right: 2em;
+}
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1em;
+  padding: 0;
+  margin: 0;
+}
+nav ul li button {
+  background: none;
+  border: none;
+  color: var(--text);
+  padding: 0.5em 1em;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background .2s;
+}
+nav ul li button:hover,
+nav ul li button:focus {
+  background: var(--accent-low);
+  color: var(--accent);
+}
+main {
+  max-width: 900px;
+  margin: 2em auto;
+  padding: 1em;
+  background: var(--surface);
+  border-radius: 12px;
+  min-height: 70vh;
+  box-shadow: 0 4px 24px #0005;
+}
+h2 {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: .5em;
+  margin-top: 0;
+}
+.tab {
+  display: none;
+}
+.tab.active { display: block; }
+
+#notes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  margin-top: 1em;
+}
+.note-card {
+  background: var(--bg);
+  padding: 1em;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #0009;
+  min-width: 220px;
+  max-width: 260px;
+  flex: 1 1 240px;
+  position: relative;
+}
+.note-card .note-title {
+  font-weight: 600;
+  margin-bottom: .5em;
+}
+.note-card .note-date {
+  font-size: .8em;
+  color: #869;
+}
+.note-card .note-actions {
+  position: absolute;
+  right: .3em; top: .3em;
+  display: flex; gap: .1em;
+}
+.note-toolbar { margin-bottom: .6em; }
+
+#note-editor.modal {
+  display: none;
+  position: fixed;
+  left:50%; top:50%; transform: translate(-50%,-50%);
+  width: 90vw; max-width: 400px;
+  background: var(--surface);
+  border: 2px solid var(--accent-low);
+  border-radius: 10px;
+  box-shadow: 0 8px 48px #222d;
+  z-index: 999;
+  padding: 1em;
+}
+#note-editor.show { display: block; }
+#note-content {
+  width: 100%;
+  min-height: 120px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  margin-bottom: .7em;
+  font-size: 1.08em;
+  padding: .5em;
+  resize: vertical;
+}
+
+#task-form {
+  display: flex;
+  gap: .6em;
+  margin: 1em 0;
+}
+#task-input {
+  flex:2;
+  background: var(--bg);
+  color: var(--text);
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  padding: .45em .7em;
+}
+#task-form button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: .5em .9em;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter .2s;
+}
+#task-form button:hover { filter: brightness(.90); }
+#task-list {
+  list-style: none;
+  padding:0;
+  margin:0;
+}
+.task-item {
+  border-bottom: 1px solid var(--border);
+  padding: .7em .3em;
+  display: flex; justify-content: space-between;
+  align-items: center;
+}
+.task-completed {
+  text-decoration: line-through;
+  color: #666;
+}
+.task-date {
+  font-size: .95em;
+  margin-left: 1em;
+  color:#98a5e0;
+}
+.task-actions button {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 1.1em;
+  cursor: pointer;
+  margin-left: .3em;
+}
+
+#planner-view {
+  margin-top: 1em;
+  background: var(--bg);
+  border-radius: 10px;
+  padding:1em;
+  color: var(--text);
+}
+.planner-day {
+  display:inline-block;
+  width:42px;
+  height:42px;
+  line-height:42px;
+  text-align:center;
+  margin:2px;
+  background: var(--surface);
+  border-radius: 6px;
+  cursor:pointer;
+  transition: background .2s;
+}
+.planner-day.today {
+  color: var(--accent);
+  font-weight:900;
+  border: 2px solid var(--accent);
+  background: var(--bg);
+}
+.planner-day.selected {
+  background: var(--accent-low);
+  color: var(--accent);
+}
+
+#db-table {
+  width: 100%;
+  background: var(--bg);
+  border-radius:4px;
+  box-shadow: 0 2px 12px #0002;
+  border-spacing: 0;
+}
+#db-table th, #db-table td {
+  padding: .7em .9em;
+  border-bottom: 1px solid var(--border);
+}
+#db-table td:last-child {
+  text-align: center;
+}
+#db-table button {
+  background: none;
+  color: var(--danger);
+  border: none;
+  cursor:pointer;
+  font-size: 1em;
+}
+
+::-webkit-scrollbar {
+  background: var(--bg);
+  width: 11px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent-low);
+  border-radius: 6px;
+}
