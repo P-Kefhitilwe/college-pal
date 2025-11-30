@@ -2,63 +2,294 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>College Pal</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <nav>
-    <div class="logo">College Pal</div>
-    <ul>
-      <li><button onclick="showTab('notes')">Notes</button></li>
-      <li><button onclick="showTab('tasks')">Tasks</button></li>
-      <li><button onclick="showTab('planner')">Planner</button></li>
-      <li><button onclick="showTab('database')">Database</button></li>
-    </ul>
-  </nav>
-  <main>
-    <section id="notes" class="tab">
-      <h2>Notes</h2>
-      <div class="note-toolbar">
-        <button onclick="newNote()">New Note</button>
+  <div id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <span class="logo-dot"></span>
+        <span>College Pal</span>
       </div>
-      <div id="notes-list"></div>
-      <div id="note-editor" class="modal">
-        <textarea id="note-content" placeholder="Write your note..." autofocus></textarea>
-        <div>
-          <button onclick="saveNote()">Save</button>
-          <button onclick="closeEditor()">Cancel</button>
+      <nav class="nav">
+        <button class="nav-item active" data-view="notes">
+          <span>📝</span>
+          <span>Notes</span>
+        </button>
+        <button class="nav-item" data-view="tasks">
+          <span>✅</span>
+          <span>Tasks</span>
+        </button>
+        <button class="nav-item" data-view="planner">
+          <span>📆</span>
+          <span>Planner</span>
+        </button>
+        <button class="nav-item" data-view="database">
+          <span>📚</span>
+          <span>Database</span>
+        </button>
+        <button class="nav-item" data-view="profile">
+          <span>👤</span>
+          <span>Profile</span>
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="sync-btn" class="ghost-btn">Sync (future)</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1 id="view-title">Notes</h1>
+          <span class="topbar-subtitle">Your all-in-one college hub.</span>
         </div>
-      </div>
-    </section>
+        <div class="topbar-right">
+          <input
+            id="global-search"
+            class="search-input"
+            type="search"
+            placeholder="Search notes, tasks, anything..."
+          />
+          <button id="add-btn" class="primary-btn">+ Add</button>
+        </div>
+      </header>
 
-    <section id="tasks" class="tab">
-      <h2>Tasks</h2>
-      <form id="task-form" onsubmit="addTask(event)">
-        <input id="task-input" placeholder="New task or assignment..." required>
-        <input type="date" id="task-date">
-        <button>Add</button>
+      <!-- Views container -->
+      <section id="view-container">
+
+        <!-- Notes View -->
+        <section id="view-notes" class="view active-view">
+          <div class="view-header">
+            <h2>All Notes</h2>
+          </div>
+          <div id="notes-list" class="grid-list"></div>
+          <div class="empty-state" id="notes-empty">
+            <p>No notes yet. Hit “+ Add” to create your first one.</p>
+          </div>
+        </section>
+
+        <!-- Tasks View -->
+        <section id="view-tasks" class="view">
+          <div class="view-header">
+            <h2>Tasks & Assignments</h2>
+          </div>
+          <div class="tasks-columns">
+            <div class="tasks-column">
+              <h3>Today</h3>
+              <div id="tasks-today" class="tasks-list"></div>
+            </div>
+            <div class="tasks-column">
+              <h3>Upcoming</h3>
+              <div id="tasks-upcoming" class="tasks-list"></div>
+            </div>
+            <div class="tasks-column">
+              <h3>Completed</h3>
+              <div id="tasks-done" class="tasks-list"></div>
+            </div>
+          </div>
+          <div class="empty-state" id="tasks-empty">
+            <p>No tasks yet. Hit “+ Add” and start a quest.</p>
+          </div>
+        </section>
+
+        <!-- Planner View -->
+        <section id="view-planner" class="view">
+          <div class="view-header">
+            <h2>Daily Planner</h2>
+          </div>
+
+          <!-- Planner + Pomodoro dock -->
+          <div class="planner-layout">
+            <div class="planner-main">
+              <div class="planner-header">
+                <input type="date" id="planner-date" />
+                <span id="planner-label"></span>
+              </div>
+              <div id="planner-items" class="planner-list"></div>
+              <div class="empty-state" id="planner-empty">
+                <p>No blocks for this day yet. Use “+ Add” to schedule.</p>
+              </div>
+            </div>
+
+            <aside class="pomodoro-panel">
+              <header class="pomodoro-header">
+                <h3>Flow Timer</h3>
+                <span id="pomodoro-mode-label" class="badge badge-warning">
+                  Focus
+                </span>
+              </header>
+              <div class="pomodoro-timer">
+                <div id="pomodoro-time-display">25:00</div>
+              </div>
+              <div class="pomodoro-controls">
+                <button id="pomodoro-start" class="primary-btn">Start</button>
+                <button id="pomodoro-pause" class="ghost-btn">Pause</button>
+                <button id="pomodoro-reset" class="ghost-btn">Reset</button>
+              </div>
+              <div class="pomodoro-options">
+                <label>
+                  Focus (min)
+                  <input id="pomodoro-focus-length" type="number" min="1" max="90" value="25" />
+                </label>
+                <label>
+                  Break (min)
+                  <input id="pomodoro-break-length" type="number" min="1" max="60" value="5" />
+                </label>
+                <label class="pomodoro-auto">
+                  <input id="pomodoro-auto-switch" type="checkbox" checked />
+                  Auto switch focus / break
+                </label>
+              </div>
+              <p class="pomodoro-note">
+                Each completed focus block adds XP and boosts Grind / Focus / Execution stats.
+              </p>
+            </aside>
+          </div>
+        </section>
+
+        <!-- Database View -->
+        <section id="view-database" class="view">
+          <div class="view-header">
+            <h2>Study Database</h2>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Course</th>
+                  <th>Type</th>
+                  <th>Title</th>
+                  <th>Due</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="database-rows"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="database-empty">
+            <p>No entries yet. “+ Add” to create your first record.</p>
+          </div>
+        </section>
+
+        <!-- Profile View -->
+        <section id="view-profile" class="view">
+          <div class="view-header">
+            <h2>Your Profile</h2>
+          </div>
+
+          <div class="profile-layout">
+            <section class="profile-card">
+              <div class="profile-avatar">
+                <span id="profile-initials">CP</span>
+              </div>
+              <div class="profile-main">
+                <h3 id="profile-name-display">Student</h3>
+                <p id="profile-tagline-display" class="profile-tagline">
+                  “Grinding XP every semester.”
+                </p>
+              </div>
+              <dl class="profile-meta">
+                <div>
+                  <dt>Major</dt>
+                  <dd id="profile-major-display">Undeclared</dd>
+                </div>
+                <div>
+                  <dt>Year</dt>
+                  <dd id="profile-year-display">1st</dd>
+                </div>
+                <div>
+                  <dt>Goal</dt>
+                  <dd id="profile-goal-display">Stay consistent</dd>
+                </div>
+              </dl>
+              <button id="edit-profile-btn" class="ghost-btn">Edit profile</button>
+            </section>
+
+            <section class="profile-stats">
+              <header class="profile-stats-header">
+                <h3>Player Stats</h3>
+                <span id="profile-level-badge" class="badge badge-warning">
+                  LV 1 • Rookie
+                </span>
+              </header>
+
+              <div class="radar-wrapper">
+                <div class="radar-ring radar-ring-outer"></div>
+                <div class="radar-ring radar-ring-inner"></div>
+                <svg
+                  id="radar-chart"
+                  viewBox="0 0 200 200"
+                  class="radar-svg"
+                  aria-label="User stat chart"
+                >
+                  <polygon
+                    id="radar-polygon"
+                    fill="rgba(79,156,255,0.45)"
+                    stroke="#4f9cff"
+                    stroke-width="2"
+                    points=""
+                  ></polygon>
+                </svg>
+                <div class="radar-label radar-label-1">Grind</div>
+                <div class="radar-label radar-label-2">Focus</div>
+                <div class="radar-label radar-label-3">Planning</div>
+                <div class="radar-label radar-label-4">Execution</div>
+                <div class="radar-label radar-label-5">Consistency</div>
+                <div class="radar-label radar-label-6">Recovery</div>
+              </div>
+
+              <div class="profile-stat-bars">
+                <div class="profile-stat-row">
+                  <span>XP</span>
+                  <div class="stat-bar">
+                    <div id="xp-bar" class="stat-bar-fill"></div>
+                  </div>
+                  <span id="xp-label" class="stat-value">0 / 100</span>
+                </div>
+                <div class="profile-stat-row">
+                  <span>Sessions</span>
+                  <span id="sessions-label" class="stat-value">0</span>
+                </div>
+                <div class="profile-stat-row">
+                  <span>Streak</span>
+                  <span id="streak-label" class="stat-value">0 days</span>
+                </div>
+              </div>
+
+              <p class="profile-note">
+                Stats level up automatically as you create notes, tasks, planner
+                blocks, database entries and complete focus sessions.
+              </p>
+            </section>
+          </div>
+        </section>
+
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal-backdrop" class="modal-backdrop hidden">
+    <div class="modal">
+      <header class="modal-header">
+        <h2 id="modal-title">New Item</h2>
+        <button id="modal-close" class="icon-btn">✕</button>
+      </header>
+      <form id="modal-form" class="modal-body">
+        <!-- Filled dynamically -->
       </form>
-      <ul id="task-list"></ul>
-    </section>
+      <footer class="modal-footer">
+        <button type="button" id="modal-cancel" class="ghost-btn">Cancel</button>
+        <button type="submit" id="modal-save" class="primary-btn">Save</button>
+      </footer>
+    </div>
+  </div>
 
-    <section id="planner" class="tab">
-      <h2>Planner / Calendar</h2>
-      <input type="month" id="planner-month" onchange="renderPlanner()" />
-      <div id="planner-view"></div>
-    </section>
-
-    <section id="database" class="tab">
-      <h2>Custom Tables</h2>
-      <button onclick="addRow()">Add Row</button>
-      <table id="db-table">
-        <thead>
-          <tr><th>Name</th><th>Value</th><th>Action</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </section>
-  </main>
   <script src="app.js"></script>
 </body>
 </html>
